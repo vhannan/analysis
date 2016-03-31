@@ -1,10 +1,7 @@
-import operator
 import os
 import json
-import sys
 
 from collections import defaultdict
-from functools import partial
 import numpy as np
 import pandas as pd
 from sklearn import linear_model
@@ -13,10 +10,7 @@ from sklearn import metrics
 from user_agents import parse
 
 from featurizer import ClickstreamFeaturizer
-
-sys.path.insert(0, r'/Users/veronicahannan/visualization')
-from plotter import PythonPlotter
-
+from visualization import plotter
 
 def create_file(input_path):
     my_directory = os.path.dirname(__file__)
@@ -25,14 +19,14 @@ def create_file(input_path):
     return infile
 
 INFILE = create_file('data/feature_matrix_XXXXXXXX.csv')
-PALETTE = 'color_palette.json'
+PALETTE = 'visualization/color_palette.json'
 
 current_directory = create_file('data/')
 
 with open(PALETTE, 'r') as d:
     colors = json.load(d)
 
-plotter = PythonPlotter(colors['purples'], alpha=0.7, fontsize=8, \
+plotter = plotter.PythonPlotter(colors['purples'], alpha=0.7, fontsize=8, \
                                 title_fontsize=14, directory=current_directory)
 
 feature_matrix = pd.read_csv(INFILE, header= 0, delimiter=',')
@@ -52,8 +46,8 @@ for parameter in nfeatures:
         bin_max = average + stdev * 2
         step = int(median) if int(median) > 1 else 1
         bins = np.arange(0,bin_max,step)
-        title = 'Attributable: Median({0}) / Mean({1})'.format(median,average) if \
-            class_label == 1 else 'Not Attributable: Median({0}) / Mean({1})'.format(median,average)
+        title = 'Class 1: Median({0}) / Mean({1})'.format(median,average) if \
+            class_label == 1 else 'Class 0: Median({0}) / Mean({1})'.format(median,average)
 
         filename = '{0}_class{1}_median.png'.format(parameter, class_label)
         plotter.make_histogram(temp_data[parameter], bins, parameter, 'frequency', \

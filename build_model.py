@@ -10,6 +10,7 @@ from sklearn.metrics import precision_recall_curve
 from user_agents import parse
 
 from featurizer import ClickstreamFeaturizer
+from visualization import plotter
 
 def create_file(input_path):
     my_directory = os.path.dirname(__file__)
@@ -18,9 +19,17 @@ def create_file(input_path):
     return infile
 
 CLASS_LABELS = create_file('data/labeled_users_XXXXXXXX.tsv')
+current_directory = create_file('data/')
 INFILE = create_file('data/user_data_XXXXXXXX.csv')
 OUTFILE = create_file('data/feature_matrix_XXXXXXXX.csv')
+PALETTE = 'visualization/color_palette.json'
 PR_CURVE = create_file('data/precision_recall_curve.png')
+
+with open(PALETTE, 'r') as cp:
+    colors = json.load(cp)
+
+plotter = plotter.PythonPlotter(colors['colors_RGB'], alpha=0.7, fontsize=8, title_fontsize=14, \
+                                                    directory=current_directory)
 
 user_data = pd.read_csv(INFILE,header=0,parse_dates=['creation_time_search', \
                             'creation_time_session', 'creation_time_pageview'])
@@ -39,7 +48,8 @@ for filter_value in PAGE_KEY_FILTERS:
 # Create lists of potential user attributes
 ref_utm_params = defaultdict(list)
 for ref_utm_type in REF_UTM_TYPES:
-    ref_utm_params[ref_utm_type] = [x for x in user_data[ref_utm_type].unique() if pd.notnull(x) and x != '0']
+    ref_utm_params[ref_utm_type] = [x for x in user_data[ref_utm_type].unique() \
+                                                    if pd.notnull(x) and x != '0']
 
 page_keys = user_data['page_category'].dropna().unique()
 
@@ -86,17 +96,17 @@ random_forest = RandomForestClassifier()
 k_fold = cross_validation.KFold(len(X), 10, shuffle = True)
 for k,(train,test) in enumerate(k_fold):
     random_forest.fit(X.ix[train],y.ix[train])
-    print("[fold {0}], score: {1}".
-        format(k,random_forest.score(X.ix[train],y.ix[train])))
+    print("[fold {0}], score: {1}".\
+                    format(k,random_forest.score(X.ix[train],y.ix[train])))
     print "Features sorted by their score:"
-    print sorted(zip(map(lambda x: round(x, 4), random_forest.feature_importances_), nfeatures),
-             reverse=True)[:40]
+    print sorted(zip(map(lambda x: round(x, 4), random_forest.feature_importances_), \
+                                                    nfeatures), reverse=True)[:40]
 
 k_fold = cross_validation.KFold(len(X), 10, shuffle = True)
 for k,(train,test) in enumerate(k_fold):
     logistic_regression.fit(X.ix[train],y.ix[train])
-    print("[fold {0}], score: {1}".
-        format(k,logistic_regression.score(X.ix[train],y.ix[train])))
+    print("[fold {0}], score: {1}".\
+                    format(k,logistic_regression.score(X.ix[train],y.ix[train])))
 
 print 'Non-zero coefficients\n'
 print 'Value\t\tFeature name'
@@ -116,13 +126,8 @@ score_RF = random_forest.fit(X_train, Y_train).predict_proba(X_test)[:,1]
 precision_LR, recall_LR, _ = precision_recall_curve(Y_test, score_LR)
 precision_RF, recall_RF, _ = precision_recall_curve(Y_test, score_RF)
 
-line1 = plt.plot(recall_LR, precision_LR, label='Logistic Regression')
-line2 = plt.plot(recall_RF, precision_RF, label='Random Forest')
-
-plt.legend(loc=1)
-plt.xlabel('Recall')
-plt.ylabel('Precision')
-plt.ylim([0.0, 1.05])
-plt.xlim([0.0, 1.0])
-plt.show()
-plt.savefig(PR_CURVE)
+x_list = [recall_RF, recall_LR]
+y_list = [precision_RF, precision_LR]
+title = 'Logistic Regression vs Random Forest'
+label_list = ['Random Forest', 'Logistic Regression']
+plotter.multiline(x_list, y_list, 'Recall', 'Precision', title, PR_CURVE, label_list)
