@@ -67,7 +67,7 @@ class PythonPlotter(object):
         plt.xlabel(x_label, fontsize = self.fontsize, alpha = self.alpha)
         plt.xlim([0,x.max()])
         plt.show()
-        self.self.fig.savefig(outfile)
+        self.fig.savefig(outfile)
         plt.close()
 
     def multiline(self, x_list, y_list, x_label, y_label, title, filename, \
@@ -84,7 +84,7 @@ class PythonPlotter(object):
         plt.legend()
         plt.xlim([0,x.max()])
         plt.show()
-        self.self.fig.savefig(outfile)
+        self.fig.savefig(outfile)
         plt.close()
 
     def make_stacked(x, data, x_tick_labels, x_label, y_label, legend_labels, \
