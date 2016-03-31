@@ -1,15 +1,9 @@
 import os
 import json
 
-from collections import defaultdict
 import numpy as np
 import pandas as pd
-from sklearn import linear_model
-from sklearn import cross_validation
-from sklearn import metrics
-from user_agents import parse
 
-from featurizer import ClickstreamFeaturizer
 from visualization import plotter
 
 def create_file(input_path):
