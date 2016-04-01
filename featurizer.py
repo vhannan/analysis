@@ -9,8 +9,8 @@ from user_agents import parse
 class ClickstreamFeaturizer(object):
     """
     The ClicksteamFeaturizer class converts a set of clickstream, session and/or
-    search rows from a single user or session and converts into a feature matrix
-    suitable for building predictive models
+    search rows from a single user into a feature matrix suitable for building
+    predictive models
     """
     def __init__(self, ref_utm_params, page_keys):
         self.utm_sources = ref_utm_params['utm_source_cat']
