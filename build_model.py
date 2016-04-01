@@ -82,8 +82,11 @@ feature_matrix.to_csv(OUTFILE, delimiter=',', header=0)
 # start modeling with my two favorite classifers
 X = matrix3[nfeatures]
 y = matrix3['label']
+
+mss = int(total_users * 0.005)
 logistic_regression = linear_model.LogisticRegression()
-random_forest = RandomForestClassifier(n_estimators=100)
+random_forest = random_forest = RandomForestClassifier(n_estimators=100, \
+    max_features="sqrt", n_jobs=-1, min_samples_split=mss, min_samples_leaf=5)
 
 logistic_regression = linear_model.LogisticRegression()
 random_forest = RandomForestClassifier()
