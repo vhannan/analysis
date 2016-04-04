@@ -13,15 +13,15 @@ class PythonPlotter(object):
         self.title_fontsize = title_fontsize
         self.directory = directory
 
-        self.fig = plt.figure(figsize=(10,6))
-        self.axes = self.fig.add_subplot(111)
-        self.axes.spines['top'].set_visible(False)
-        self.axes.spines['bottom'].set_visible(False)
-        self.axes.spines['right'].set_visible(False)
-        self.axes.spines['left'].set_visible(False)
-
     def make_histogram(self, data, bins, x_label, y_label, title, filename, \
         color_index, stacked=False, labels=None):
+        fig = plt.figure(figsize=(10,6))
+        axes = fig.add_subplot(111)
+        axes.spines['top'].set_visible(False)
+        axes.spines['bottom'].set_visible(False)
+        axes.spines['right'].set_visible(False)
+        axes.spines['left'].set_visible(False)
+
         outfile = os.path.join(self.directory, filename)
         if stacked:
             plt.hist(data, bins, color_index, alpha = self.alpha, \
@@ -37,10 +37,17 @@ class PythonPlotter(object):
         plt.xlabel(x_label, fontsize = self.fontsize, alpha = self.alpha)
         plt.xlim([min(bins), max(bins)])
         plt.show()
-        self.fig.savefig(outfile)
+        fig.savefig(outfile)
         plt.close()
 
     def make_barchart(self, x,y, title, ylabel, labels, filename, color_index):
+        fig = plt.figure(figsize=(10,6))
+        axes = fig.add_subplot(111)
+        axes.spines['top'].set_visible(False)
+        axes.spines['bottom'].set_visible(False)
+        axes.spines['right'].set_visible(False)
+        axes.spines['left'].set_visible(False)
+
         x_index = np.arange(0,len(x))
         labels = np.array(labels)
         outfile = os.path.join(self.directory, filename)
@@ -54,29 +61,42 @@ class PythonPlotter(object):
         plt.ylabel(ylabel, fontsize = self.fontsize, alpha = self.alpha)
         plt.xlim([0,x.max()+1.0])
         plt.show()
-        self.fig.savefig(outfile)
+        fig.savefig(outfile)
         plt.close()
 
     def make_line(self, x, y, x_label, y_label, title, filename, color_index):
+        fig = plt.figure(figsize=(10,6))
+        axes = fig.add_subplot(111)
+        axes.spines['top'].set_visible(False)
+        axes.spines['bottom'].set_visible(False)
+        axes.spines['right'].set_visible(False)
+        axes.spines['left'].set_visible(False)
+
         outfile = os.path.join(self.directory, filename)
         plt.plot(x, y, linewidth=1.5, color = self.color_scheme[color_index], alpha = self.alpha)
-        self.axes.set_title(title, fontsize = self.title_fontsize, alpha=self.alpha,  weight='bold')
+        axes.set_title(title, fontsize = self.title_fontsize, alpha=self.alpha,  weight='bold')
         plt.yticks(fontsize = self.fontsize, alpha = self.alpha)
         plt.xticks(fontsize = self.fontsize, alpha = self.alpha, ha = 'right')
         plt.ylabel(y_label, fontsize = self.fontsize, alpha = self.alpha)
         plt.xlabel(x_label, fontsize = self.fontsize, alpha = self.alpha)
         plt.xlim([0,x.max()])
         plt.show()
-        self.fig.savefig(outfile)
+        fig.savefig(outfile)
         plt.close()
 
     def multiline(self, x_list, y_list, x_label, y_label, title, filename, \
                                                                     label_list):
+        fig = plt.figure(figsize=(10,6))
+        axes = fig.add_subplot(111)
+        axes.spines['top'].set_visible(False)
+        axes.spines['bottom'].set_visible(False)
+        axes.spines['right'].set_visible(False)
+        axes.spines['left'].set_visible(False)
         outfile = os.path.join(self.directory, filename)
         for ind, x in enumerate(x_list):
             plt.plot(x, y_list[ind], linewidth=1.5, color = self.color_scheme[ind], \
                                             label = label_list[ind], alpha = self.alpha)
-        self.axes.set_title(title, fontsize = self.title_fontsize, alpha=self.alpha,  weight='bold')
+        axes.set_title(title, fontsize = self.title_fontsize, alpha=self.alpha,  weight='bold')
         plt.yticks(fontsize = self.fontsize, alpha = self.alpha)
         plt.xticks(fontsize = self.fontsize, alpha = self.alpha, ha = 'right')
         plt.ylabel(y_label, fontsize = self.fontsize, alpha = self.alpha)
@@ -84,11 +104,17 @@ class PythonPlotter(object):
         plt.legend()
         plt.xlim([0,x.max()])
         plt.show()
-        self.fig.savefig(outfile)
+        fig.savefig(outfile)
         plt.close()
 
     def make_stacked(x, data, x_tick_labels, x_label, y_label, legend_labels, \
                                                                 title, filename):
+        fig = plt.figure(figsize=(10,6))
+        axes = fig.add_subplot(111)
+        axes.spines['top'].set_visible(False)
+        axes.spines['bottom'].set_visible(False)
+        axes.spines['right'].set_visible(False)
+        axes.spines['left'].set_visible(False)                                                        
         outfile = os.path.join(self.directory, filename)
         width = 0.5
         legend_params = []
@@ -113,5 +139,5 @@ class PythonPlotter(object):
         plt.ylabel(y_label, fontsize = self.fontsize, alpha = self.alpha)
         plt.xlabel(x_label, fontsize = self.fontsize, alpha = self.alpha)
         plt.legend(tuple(legend_params), legend_labels)
-        self.fig.savefig(outfile)
+        fig.savefig(outfile)
         plt.close()
